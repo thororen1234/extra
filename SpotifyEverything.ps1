@@ -25,9 +25,15 @@ Function Update-App {
         Write-Host "Downloading $ArchiveName"
         Invoke-WebRequest -Uri $DownloadUri -OutFile $ArchivePath -UseBasicParsing
 
-        # Extract archive
-        Write-Host "Unzipping $ArchiveName"
-        Expand-Archive -Path $ArchivePath -DestinationPath "$env:APPDATA\spicetify\CustomApps"
+        if ($AppName -eq "lyrixed") {
+            Write-Host "Unzipping $ArchiveName"
+            Expand-Archive -Path $ArchivePath -DestinationPath "$env:APPDATA\spicetify\CustomApps\lyrixed"
+        }
+        else {
+            # Extract archive
+            Write-Host "Unzipping $ArchiveName"
+            Expand-Archive -Path $ArchivePath -DestinationPath "$env:APPDATA\spicetify\CustomApps"
+        }
 
         # Clean up archive
         Write-Host "Cleaning up $ArchiveName"
@@ -42,7 +48,8 @@ Function Update-App {
         Write-Host "Configuring Spicetify for $AppName"
         spicetify config custom_apps $appName
 
-    } catch {
+    }
+    catch {
         Write-Host "Error processing $AppName : $($_.Exception.Message)"
     }
 }
@@ -71,6 +78,42 @@ Update-App -AppName "external-jukebox" `
     -ArchiveName "external-jukebox.zip" `
     -ExtractFolder "spicetify-apps-dist-dist-eternal-jukebox" `
     -TargetFolder "external-jukebox"
+
+Update-App -AppName "history-in-sidebar" `
+    -DownloadUri "https://github.com/Bergbok/Spicetify-Creations/archive/refs/heads/dist/history-in-sidebar.zip" `
+    -ArchiveName "history-in-sidebar.zip" `
+    -ExtractFolder "Spicetify-Creations-dist-history-in-sidebar" `
+    -TargetFolder "history-in-sidebar"
+
+Update-App -AppName "playlist-tags" `
+    -DownloadUri "https://github.com/Bergbok/Spicetify-Creations/archive/refs/heads/dist/playlist-tags.zip" `
+    -ArchiveName "playlist-tags.zip" `
+    -ExtractFolder "Spicetify-Creations-dist-playlist-tags" `
+    -TargetFolder "playlist-tags"
+
+Update-App -AppName "visualizer" `
+    -DownloadUri "https://github.com/Konsl/spicetify-visualizer/archive/refs/heads/dist.zip" `
+    -ArchiveName "visualizer.zip" `
+    -ExtractFolder "spicetify-visualizer-dist" `
+    -TargetFolder "visualizer"
+
+Update-App -AppName "stats" `
+    -DownloadUri "https://github.com/harbassan/spicetify-apps/releases/download/stats-v1.1.1/spicetify-stats.release.zip" `
+    -ArchiveName "stats.zip" `
+    -ExtractFolder "stats" `
+    -TargetFolder "stats"
+
+Update-App -AppName "library" `
+    -DownloadUri "https://github.com/harbassan/spicetify-apps/releases/download/library-v1.0.0/spicetify-library.release.zip" `
+    -ArchiveName "library.zip" `
+    -ExtractFolder "library" `
+    -TargetFolder "library"
+
+Update-App -AppName "lyrixed" `
+    -DownloadUri "https://github.com/Nuzair46/Lyrixed/releases/latest/download/lyrixed.zip" `
+    -ArchiveName "lyrixed.zip" `
+    -ExtractFolder "lyrixed" `
+    -TargetFolder "lyrixed"
 
 Write-Host "Removing Combined Playlists Github Dir"
 Remove-Item -Recurse -Force "$env:APPDATA\spicetify\CustomApps\spicetify-combined-playlists-dist"
